@@ -1,13 +1,18 @@
 import React, { useContext, useEffect } from 'react';
 import planetsContext from '../context/myContext';
+import filterName from '../services/filterName';
 import getData from '../services/getData';
 
 function Table() {
-  const { data, setData } = useContext(planetsContext);
+  const { data, setData, filterByName } = useContext(planetsContext);
 
   useEffect(async () => {
     setData(await getData());
   }, []);
+
+  useEffect(() => {
+    filterName(data, setData, filterByName);
+  }, [filterByName]);
 
   return (
     <div>

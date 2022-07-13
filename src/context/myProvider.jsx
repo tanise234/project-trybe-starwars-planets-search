@@ -4,10 +4,13 @@ import MyContext from './myContext';
 
 function Provider({ children }) {
   const [data, setData] = useState(['Terra', 'Marte', 'Jupiter']);
+  const [filterByName, setFilterByName] = useState('');
 
   const contextValue = {
     data,
     setData,
+    filterByName,
+    setFilterByName,
   };
 
   return (
