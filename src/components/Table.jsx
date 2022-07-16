@@ -1,18 +1,14 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext } from 'react';
 import planetsContext from '../context/myContext';
-import filterByName from '../services/filterByName';
 
 function Table() {
   const {
-    data,
-    nameTyped,
     filteredData,
-    setFilteredData,
   } = useContext(planetsContext);
 
-  useEffect(() => {
-    filterByName(data, nameTyped, setFilteredData);
-  }, [data, nameTyped, setFilteredData]);
+  // useEffect(() => {
+  //   filterByName(data, nameTyped, setFilteredData);
+  // }, [data, nameTyped, setFilteredData]);
 
   return (
     <div>

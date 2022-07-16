@@ -1,8 +1,28 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import planetsContext from '../context/myContext';
+// import filterByNumber from '../services/filterByNumber';
 
 function Filters() {
+  const {
+    filterByNumericValues,
+    setFilterByNumericValues } = useContext(planetsContext);
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    const column = event.target[0].value;
+    const comparison = event.target[1].value;
+    const { value } = event.target[2];
+    setFilterByNumericValues(
+      [...filterByNumericValues,
+        { column, comparison, value }],
+    );
+  };
+
   return (
-    <div className="filters selectors">
+    <form
+      className="filters selectors"
+      onSubmit={ handleSubmit }
+    >
       <select
         name="column filter"
         id="column filter"
@@ -32,10 +52,10 @@ function Filters() {
         type="submit"
         data-testid="button-filter"
       >
-        Filter
+        Add filter
 
       </button>
-    </div>
+    </form>
   );
 }
 
