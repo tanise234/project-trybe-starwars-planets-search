@@ -11,7 +11,7 @@ function Header() {
         type="text"
         placeholder="name"
         data-testid="name-filter"
-        onChange={ ({ target }) => setFilterByName(target.value) }
+        onChange={ ({ target: { value } }) => setFilterByName(value) }
       />
     </header>
   );

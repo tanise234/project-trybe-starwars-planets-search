@@ -1,17 +1,33 @@
+// import React from 'react';
 import React, { useContext, useEffect } from 'react';
 import planetsContext from '../context/myContext';
-import filterName from '../services/filterName';
 import getData from '../services/getData';
 
 function Table() {
-  const { data, setData, filterByName } = useContext(planetsContext);
+  const {
+    data,
+    setData,
+    filterByName,
+    filteredData,
+    setFilteredData,
+  } = useContext(planetsContext);
 
-  useEffect(async () => {
-    setData(await getData());
+  useEffect(() => {
+    const fetchAPI = async () => {
+      const get = await getData();
+      setData(get);
+      setFilteredData(get);
+    };
+    fetchAPI();
   }, []);
 
   useEffect(() => {
-    filterName(data, setData, filterByName);
+    if (filterByName.length > 0) {
+      return setFilteredData(data.filter(
+        ({ name }) => name.toLowerCase().includes(filterByName.toLowerCase()),
+      ));
+    }
+    return setFilteredData(data);
   }, [filterByName]);
 
   return (
@@ -36,7 +52,7 @@ function Table() {
         </thead>
         <tbody>
           {
-            data.map((planet, index) => (
+            filteredData.map((planet, index) => (
               <tr key={ index }>
                 <td>{ planet.name }</td>
                 <td>{ planet.rotation_period }</td>

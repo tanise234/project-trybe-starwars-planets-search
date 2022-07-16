@@ -3,7 +3,8 @@ import PropTypes from 'prop-types';
 import MyContext from './myContext';
 
 function Provider({ children }) {
-  const [data, setData] = useState(['Terra', 'Marte', 'Jupiter']);
+  const [data, setData] = useState([]);
+  const [filteredData, setFilteredData] = useState([]);
   const [filterByName, setFilterByName] = useState('');
 
   const contextValue = {
@@ -11,6 +12,8 @@ function Provider({ children }) {
     setData,
     filterByName,
     setFilterByName,
+    filteredData,
+    setFilteredData,
   };
 
   return (

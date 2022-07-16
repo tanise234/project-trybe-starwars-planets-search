@@ -6,10 +6,12 @@ import Provider from './context/myProvider';
 
 function App() {
   return (
-    <Provider>
-      <Header />
-      <Table />
-    </Provider>
+    <div>
+      <Provider>
+        <Header />
+        <Table />
+      </Provider>
+    </div>
   );
 }
 
