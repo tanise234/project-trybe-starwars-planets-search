@@ -1,34 +1,18 @@
-// import React from 'react';
 import React, { useContext, useEffect } from 'react';
 import planetsContext from '../context/myContext';
-import getData from '../services/getData';
+import filterByName from '../services/filterByName';
 
 function Table() {
   const {
     data,
-    setData,
-    filterByName,
+    nameTyped,
     filteredData,
     setFilteredData,
   } = useContext(planetsContext);
 
   useEffect(() => {
-    const fetchAPI = async () => {
-      const get = await getData();
-      setData(get);
-      setFilteredData(get);
-    };
-    fetchAPI();
-  }, []);
-
-  useEffect(() => {
-    if (filterByName.length > 0) {
-      return setFilteredData(data.filter(
-        ({ name }) => name.toLowerCase().includes(filterByName.toLowerCase()),
-      ));
-    }
-    return setFilteredData(data);
-  }, [filterByName]);
+    filterByName(data, nameTyped, setFilteredData);
+  }, [data, nameTyped, setFilteredData]);
 
   return (
     <div>

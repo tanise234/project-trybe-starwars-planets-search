@@ -1,17 +1,27 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import MyContext from './myContext';
+import getData from '../services/getData';
 
 function Provider({ children }) {
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
-  const [filterByName, setFilterByName] = useState('');
+  const [nameTyped, setNameTyped] = useState('');
+
+  useEffect(() => {
+    const fetchAPI = async () => {
+      const get = await getData();
+      setData(get);
+      setFilteredData(get);
+    };
+    fetchAPI();
+  }, []);
 
   const contextValue = {
     data,
     setData,
-    filterByName,
-    setFilterByName,
+    nameTyped,
+    setNameTyped,
     filteredData,
     setFilteredData,
   };
