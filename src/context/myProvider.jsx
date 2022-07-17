@@ -11,6 +11,13 @@ function Provider({ children }) {
   const [filterByNumericValues, setFilterByNumericValues] = useState(
     [],
   );
+  const [filterColumn, setfilterColumn] = useState([
+    'population',
+    'orbital_period',
+    'diameter',
+    'rotation_period',
+    'surface_water',
+  ]);
 
   const filterByNumber = (filters) => {
     // console.log(filters);
@@ -71,6 +78,8 @@ function Provider({ children }) {
     setFilteredData,
     filterByNumericValues,
     setFilterByNumericValues,
+    filterColumn,
+    setfilterColumn,
   };
 
   return (

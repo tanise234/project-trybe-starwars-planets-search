@@ -4,7 +4,10 @@ import planetsContext from '../context/myContext';
 function Filters() {
   const {
     filterByNumericValues,
-    setFilterByNumericValues } = useContext(planetsContext);
+    setFilterByNumericValues,
+    filterColumn,
+    setfilterColumn,
+  } = useContext(planetsContext);
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -15,6 +18,7 @@ function Filters() {
       [...filterByNumericValues,
         { column, comparison, value }],
     );
+    setfilterColumn(filterColumn.filter((item) => item !== column));
   };
 
   return (
@@ -27,11 +31,11 @@ function Filters() {
         id="column filter"
         data-testid="column-filter"
       >
-        <option value="population">population</option>
-        <option value="orbital_period">orbital_period</option>
-        <option value="diameter">diameter</option>
-        <option value="rotation_period">rotation_period</option>
-        <option value="surface_water">surface_water</option>
+        {
+          filterColumn.map(
+            (item) => <option value={ item } key={ item }>{item}</option>,
+          )
+        }
       </select>
       <select
         name="comparison filter"
