@@ -1,6 +1,5 @@
 import React, { useContext } from 'react';
 import planetsContext from '../context/myContext';
-// import filterByNumber from '../services/filterByNumber';
 
 function Filters() {
   const {

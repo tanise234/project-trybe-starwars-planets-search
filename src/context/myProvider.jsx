@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import MyContext from './myContext';
 import getData from '../services/getData';
 import filterByName from '../services/filterByName';
-import filterByNumber from '../services/filterByNumber';
 
 function Provider({ children }) {
   const [data, setData] = useState([]);
@@ -12,6 +11,36 @@ function Provider({ children }) {
   const [filterByNumericValues, setFilterByNumericValues] = useState(
     [],
   );
+
+  const filterByNumber = (filters) => {
+    // console.log(filters);
+    // console.log(filteredData);
+    filters.forEach((filter) => {
+      let newfiltered = filteredData;
+      // console.log(filter.comparison);
+      switch (filter.comparison) {
+      case 'maior que':
+        newfiltered = filteredData.filter(
+          (planet) => planet[filter.column] > Number(filter.value),
+        );
+        break;
+      case 'menor que':
+        newfiltered = filteredData.filter(
+          (planet) => planet[filter.column] < Number(filter.value),
+        );
+        break;
+      case 'igual a':
+        newfiltered = filteredData.filter(
+          (planet) => planet[filter.column] === filter.value,
+        );
+        break;
+      default:
+        break;
+      }
+      setFilteredData(newfiltered);
+      // console.log(newfiltered);
+    });
+  };
 
   // ao iniciar
   useEffect(() => {

@@ -6,10 +6,6 @@ function Table() {
     filteredData,
   } = useContext(planetsContext);
 
-  // useEffect(() => {
-  //   filterByName(data, nameTyped, setFilteredData);
-  // }, [data, nameTyped, setFilteredData]);
-
   return (
     <div>
       <table>
