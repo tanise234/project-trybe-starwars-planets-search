@@ -24,12 +24,13 @@ function Provider({ children }) {
         ({ name }) => name.toLowerCase().includes(nameTyped.toLowerCase()),
       ));
     }
-    return setFilteredData(data);
+    setFilteredData(data);
   };
 
   const filterByNumber = () => {
+    filterByName();
+    let newfiltered = filteredData;
     filterByNumericValues.forEach(({ column, comparison, value }) => {
-      let newfiltered = filteredData;
       switch (comparison) {
       case 'maior que':
         newfiltered = filteredData.filter(
@@ -63,10 +64,19 @@ function Provider({ children }) {
     fetchAPI();
   }, []);
 
+  useEffect(() => {
+    console.log('campo para digitação mudou');
+  }, [nameTyped]);
+
+  useEffect(() => {
+    console.log('array de filtros mudou');
+  }, [filterByNumericValues]);
+
   // ao aplicar um filtro
   useEffect(() => {
-    filterByName();
-    if (filterByNumericValues.length > 0) {
+    if (filterByNumericValues.length === 0) {
+      filterByName();
+    } else {
       filterByNumber();
     }
   }, [nameTyped, filterByNumericValues]);
