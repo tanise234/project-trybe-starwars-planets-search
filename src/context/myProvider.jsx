@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import MyContext from './myContext';
 import getData from '../services/getData';
-import filterByName from '../services/filterByName';
 
 function Provider({ children }) {
   const [data, setData] = useState([]);
@@ -19,33 +18,38 @@ function Provider({ children }) {
     'surface_water',
   ]);
 
-  const filterByNumber = (filters) => {
-    // console.log(filters);
-    // console.log(filteredData);
-    filters.forEach((filter) => {
+  const filterByName = () => {
+    if (nameTyped.length > 0) {
+      return setFilteredData(data.filter(
+        ({ name }) => name.toLowerCase().includes(nameTyped.toLowerCase()),
+      ));
+    }
+    return setFilteredData(data);
+  };
+
+  const filterByNumber = () => {
+    filterByNumericValues.forEach(({ column, comparison, value }) => {
       let newfiltered = filteredData;
-      // console.log(filter.comparison);
-      switch (filter.comparison) {
+      switch (comparison) {
       case 'maior que':
         newfiltered = filteredData.filter(
-          (planet) => planet[filter.column] > Number(filter.value),
+          (planet) => Number(planet[column]) > Number(value),
         );
         break;
       case 'menor que':
         newfiltered = filteredData.filter(
-          (planet) => planet[filter.column] < Number(filter.value),
+          (planet) => Number(planet[column]) < Number(value),
         );
         break;
       case 'igual a':
         newfiltered = filteredData.filter(
-          (planet) => planet[filter.column] === filter.value,
+          (planet) => Number(planet[column]) === Number(value),
         );
         break;
       default:
         break;
       }
       setFilteredData(newfiltered);
-      // console.log(newfiltered);
     });
   };
 
@@ -59,15 +63,13 @@ function Provider({ children }) {
     fetchAPI();
   }, []);
 
-  // ao digitar
+  // ao aplicar um filtro
   useEffect(() => {
-    filterByName(data, nameTyped, setFilteredData);
-  }, [nameTyped]);
-
-  // ao selecionar filtro numérico
-  useEffect(() => {
-    filterByNumber(filterByNumericValues);
-  }, [filterByNumericValues]);
+    filterByName();
+    if (filterByNumericValues.length > 0) {
+      filterByNumber();
+    }
+  }, [nameTyped, filterByNumericValues]);
 
   const contextValue = {
     data,

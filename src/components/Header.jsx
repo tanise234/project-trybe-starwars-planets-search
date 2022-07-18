@@ -1,6 +1,5 @@
 import React, { useContext } from 'react';
 import planetsContext from '../context/myContext';
-import Filters from './Filters';
 
 function Header() {
   const { setNameTyped } = useContext(planetsContext);
@@ -14,7 +13,6 @@ function Header() {
         data-testid="name-filter"
         onChange={ ({ target: { value } }) => setNameTyped(value) }
       />
-      <Filters />
     </header>
   );
 }
