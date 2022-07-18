@@ -20,39 +20,26 @@ function Provider({ children }) {
 
   const filterByName = () => {
     if (nameTyped.length > 0) {
-      return setFilteredData(data.filter(
+      return data.filter(
         ({ name }) => name.toLowerCase().includes(nameTyped.toLowerCase()),
-      ));
+      );
     }
-    setFilteredData(data);
+    return data;
   };
 
-  const filterByNumber = () => {
-    filterByName();
-    let newfiltered = filteredData;
-    filterByNumericValues.forEach(({ column, comparison, value }) => {
+  const filterByNumber = (newData) => newData.filter((planet) => filterByNumericValues
+    .every(({ column, comparison, value }) => {
       switch (comparison) {
       case 'maior que':
-        newfiltered = filteredData.filter(
-          (planet) => Number(planet[column]) > Number(value),
-        );
-        break;
+        return Number(planet[column]) > Number(value);
       case 'menor que':
-        newfiltered = filteredData.filter(
-          (planet) => Number(planet[column]) < Number(value),
-        );
-        break;
+        return Number(planet[column]) < Number(value);
       case 'igual a':
-        newfiltered = filteredData.filter(
-          (planet) => Number(planet[column]) === Number(value),
-        );
-        break;
+        return Number(planet[column]) === Number(value);
       default:
-        break;
+        return null;
       }
-      setFilteredData(newfiltered);
-    });
-  };
+    }));
 
   // ao iniciar
   useEffect(() => {
@@ -66,18 +53,21 @@ function Provider({ children }) {
 
   useEffect(() => {
     console.log('campo para digitação mudou');
+    // filterByName();
+    // filterByNumber();
   }, [nameTyped]);
 
   useEffect(() => {
     console.log('array de filtros mudou');
+    // filterByName();
+    //   filterByNumber();
   }, [filterByNumericValues]);
 
   // ao aplicar um filtro
   useEffect(() => {
-    if (filterByNumericValues.length === 0) {
-      filterByName();
-    } else {
-      filterByNumber();
+    setFilteredData(filterByName());
+    if (filterByNumericValues.length > 0) {
+      setFilteredData(filterByNumber(filterByName()));
     }
   }, [nameTyped, filterByNumericValues]);
 
