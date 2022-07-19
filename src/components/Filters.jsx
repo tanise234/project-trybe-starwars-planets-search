@@ -45,7 +45,15 @@ function Filters() {
                   .some((filter) => item === filter.column)) {
                   return null;
                 }
-                return <option value={ item } key={ item }>{item}</option>;
+                return (
+                  <option
+                    value={ item }
+                    key={ item }
+                    data-testid="column-options"
+                  >
+                    {item}
+                  </option>
+                );
               },
             )
           }

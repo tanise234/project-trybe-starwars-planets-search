@@ -51,18 +51,6 @@ function Provider({ children }) {
     fetchAPI();
   }, []);
 
-  useEffect(() => {
-    console.log('campo para digitação mudou');
-    // filterByName();
-    // filterByNumber();
-  }, [nameTyped]);
-
-  useEffect(() => {
-    console.log('array de filtros mudou');
-    // filterByName();
-    //   filterByNumber();
-  }, [filterByNumericValues]);
-
   // ao aplicar um filtro
   useEffect(() => {
     setFilteredData(filterByName());
