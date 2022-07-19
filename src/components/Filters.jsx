@@ -31,6 +31,7 @@ function Filters() {
     <div>
       <form
         className="filters selectors"
+        data-testid="form-filter"
         onSubmit={ handleSubmit }
       >
         <select
