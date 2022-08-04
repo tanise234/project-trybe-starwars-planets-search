@@ -58,6 +58,9 @@ describe('Testar as funções', () => {
   test('Testar getData', async () => {
     const planets = screen.getAllByTestId('planets');
     const inputName = screen.getByTestId('name-filter');
+    const btnAdd = screen.getByTestId('button-filter');
+    const btnDel = screen.getByTestId('button-remove-filters');
+
     expect(inputName).toHaveValue('');
     const tableHeaders = screen.getAllByRole('columnheader');
     expect(tableHeaders[0]).toBeInTheDocument();
@@ -72,37 +75,42 @@ describe('Testar as funções', () => {
     userEvent.type(inputName, "d");
     expect(screen.getAllByTestId('planets')[0]).toHaveTextContent('Endor');
 
-    const inputColumn = screen.getByTestId('column-filter');
-    const inputComparison = screen.getByTestId('comparison-filter');
-    const inputValue = screen.getByTestId('value-filter');
-    userEvent.selectOptions(inputColumn, ['rotation_period']);
-    userEvent.selectOptions(inputComparison, ['maior que']);
-    userEvent.type(inputValue, '23');
-    expect(inputColumn).toHaveValue('rotation_period');
-    expect(inputComparison).toHaveValue('maior que');
-    expect(inputValue).toHaveValue(23);
+    userEvent.selectOptions(screen.getByTestId('column-filter'), ['rotation_period']);
+    userEvent.selectOptions(screen.getByTestId('comparison-filter'), ['maior que']);
+    userEvent.type(screen.getByTestId('value-filter'), '23');
+    expect(screen.getByTestId('column-filter')).toHaveValue('rotation_period');
+    expect(screen.getByTestId('comparison-filter')).toHaveValue('maior que');
+    expect(screen.getByTestId('value-filter')).toHaveValue(23);
+    userEvent.click(btnAdd);
+    expect(screen.queryAllByTestId('filter')).toHaveLength(1);
+
+    userEvent.click(btnDel);
     expect(screen.queryAllByTestId('filter')).toHaveLength(0);
+    userEvent.type(screen.getByTestId('name-filter'), '{backspace}{backspace}');
+    expect(screen.getAllByTestId('planets')).toHaveLength(10);
+    userEvent.selectOptions(screen.getByTestId('column-filter'), ['rotation_period']);
+    userEvent.selectOptions(screen.getByTestId('comparison-filter'), ['igual a']);
+    userEvent.type(screen.getByTestId('value-filter'), '24');
+    userEvent.click(btnAdd);
+    expect(screen.queryAllByTestId('planets')).toHaveLength(0);
 
-    const btnAdd = screen.getByTestId('button-filter');
-    // const form = screen.getByTestId('form-filter');
-    // userEvent.click(btnAdd);
-    // fireEvent.submit(form);
+    const filterPopulation = screen.getByText('population');
 
-    const filterPopulation = screen.findByText(/population maior que 0/i);
-    // userEvent.click(btnAdd);
-    const filterOrbital_period  = screen.findByText(/orbital_period  maior que 0/i);
+    userEvent.click(btnAdd);
+    expect(screen.getAllByTestId('filter')).toHaveLength(2);
     // expect(filterPopulation).toBeInTheDocument();
+    userEvent.click(btnAdd);
+    expect(screen.getAllByTestId('filter')).toHaveLength(3);
+    
+    userEvent.click(btnDel);
+    expect(filterPopulation).not.toBeInTheDocument();
 
-
-    // const btnAdd = screen.getByTestId('button-filter');
-    // userEvent.click(btnAdd);
-    // userEvent.click(btnAdd);
-    // expect(screen.getAllByTestId('filter')).toHaveLength(2);
-
-    userEvent.click(screen.getByTestId('button-remove-filters'));
-    expect(screen.queryAllByTestId('filter')).toHaveLength(0);
-
-
+    userEvent.click(btnAdd);
+    userEvent.click(btnAdd);
+    const btnDelOne = screen.getAllByTestId('button-delete');
+    expect(btnDelOne).toHaveLength(2);
+    userEvent.click(btnDelOne[0]);
+    expect(screen.getAllByTestId('filter')).toHaveLength(1);
   });
 });
 

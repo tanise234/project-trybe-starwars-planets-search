@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import planetsContext from '../context/myContext';
 
 function Filters() {
@@ -6,18 +6,56 @@ function Filters() {
     filterByNumericValues,
     setFilterByNumericValues,
     filterColumn,
+    formData,
+    setFormData,
+    filterInputs,
+    setFilterInputs,
   } = useContext(planetsContext);
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const column = event.target[0].value;
-    const comparison = event.target[1].value;
-    const { value } = event.target[2];
-    setFilterByNumericValues(
-      [...filterByNumericValues,
-        { column, comparison, value }],
-    );
+  const handleColumn = ({ target }) => {
+    console.log(target.value);
+    setFilterInputs({ ...filterInputs, column: target.value });
   };
+  const handleComparison = ({ target }) => {
+    console.log(target.value);
+    setFilterInputs({ ...filterInputs, comparison: target.value });
+  };
+  const handleValue = ({ target }) => {
+    console.log(target.value);
+    setFilterInputs({ ...filterInputs, value: target.value });
+  };
+
+  useEffect(() => {
+    const firstFilter = filterColumn.find(
+      (item) => {
+        if (item && filterByNumericValues
+          .every((filter) => item !== filter.column)) {
+          return item;
+        }
+        return null;
+      },
+    );
+    setFilterInputs({
+      ...filterInputs,
+      column: firstFilter,
+    });
+  }, [filterByNumericValues]);
+
+  const handleSubmit = (event) => {
+    console.log(filterInputs);
+    console.log(filterByNumericValues);
+    event.preventDefault();
+    setFormData(filterInputs);
+  };
+
+  useEffect(() => {
+    if (formData !== null) {
+      setFilterByNumericValues(
+        [...filterByNumericValues,
+          formData],
+      );
+    }
+  }, [formData]);
 
   const handleDelete = (columnToDelete) => setFilterByNumericValues(
     filterByNumericValues.filter(
@@ -38,6 +76,7 @@ function Filters() {
           name="column filter"
           id="column filter"
           data-testid="column-filter"
+          onChange={ (event) => handleColumn(event) }
         >
           {
             filterColumn.map(
@@ -63,6 +102,8 @@ function Filters() {
           name="comparison filter"
           id="comparison filter"
           data-testid="comparison-filter"
+          onChange={ (event) => handleComparison(event) }
+
         >
           <option value="maior que">maior que</option>
           <option value="menor que">menor que</option>
@@ -72,6 +113,8 @@ function Filters() {
           type="number"
           defaultValue="0"
           data-testid="value-filter"
+          onChange={ (event) => handleValue(event) }
+
         />
         <button
           type="submit"
@@ -85,18 +128,24 @@ function Filters() {
         {
           filterByNumericValues.map(
             (filter) => (
-              <div key={ filter.column } data-testid="filter">
-                <br />
-                <span>
-                  {`${filter.column} ${filter.comparison} ${filter.value} `}
-                </span>
-                <button
-                  type="button"
-                  onClick={ () => handleDelete(filter.column) }
-                >
-                  Delete
-                </button>
-              </div>
+              formData !== {}
+             && (
+               <div
+                 key={ filter.column }
+                 data-testid="filter"
+               >
+                 <br />
+                 <span>
+                   {`${filter.column} ${filter.comparison} ${filter.value} `}
+                 </span>
+                 <button
+                   type="button"
+                   data-testid="button-delete"
+                   onClick={ () => handleDelete(filter.column) }
+                 >
+                   Delete
+                 </button>
+               </div>)
             ),
           )
         }

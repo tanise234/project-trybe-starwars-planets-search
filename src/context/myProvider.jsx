@@ -7,9 +7,15 @@ function Provider({ children }) {
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [nameTyped, setNameTyped] = useState('');
+  const [formData, setFormData] = useState(null);
   const [filterByNumericValues, setFilterByNumericValues] = useState(
     [],
   );
+  const [filterInputs, setFilterInputs] = useState({
+    column: 'population',
+    comparison: 'maior que',
+    value: 0,
+  });
   const [filterColumn, setfilterColumn] = useState([
     'population',
     'orbital_period',
@@ -64,10 +70,14 @@ function Provider({ children }) {
     setData,
     nameTyped,
     setNameTyped,
+    formData,
+    setFormData,
     filteredData,
     setFilteredData,
     filterByNumericValues,
     setFilterByNumericValues,
+    filterInputs,
+    setFilterInputs,
     filterColumn,
     setfilterColumn,
   };
