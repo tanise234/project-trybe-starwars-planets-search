@@ -56,7 +56,7 @@ describe('Testar as funções', () => {
     cleanup();
   })
   test('Testar getData', async () => {
-    const planets = screen.getAllByTestId('planets');
+    const planets = screen.getAllByTestId('planet-name');
     const inputName = screen.getByTestId('name-filter');
     const btnAdd = screen.getByTestId('button-filter');
     const btnDel = screen.getByTestId('button-remove-filters');
@@ -71,9 +71,9 @@ describe('Testar as funções', () => {
 
     userEvent.type(inputName, "n");
     expect(planets[0]).toHaveTextContent('Tatooine');
-    expect(screen.getAllByTestId('planets')[3]).toHaveTextContent('Bespin');
+    expect(screen.getAllByTestId('planet-name')[3]).toHaveTextContent('Bespin');
     userEvent.type(inputName, "d");
-    expect(screen.getAllByTestId('planets')[0]).toHaveTextContent('Endor');
+    expect(screen.getAllByTestId('planet-name')[0]).toHaveTextContent('Endor');
 
     userEvent.selectOptions(screen.getByTestId('column-filter'), ['rotation_period']);
     userEvent.selectOptions(screen.getByTestId('comparison-filter'), ['maior que']);
@@ -87,12 +87,12 @@ describe('Testar as funções', () => {
     userEvent.click(btnDel);
     expect(screen.queryAllByTestId('filter')).toHaveLength(0);
     userEvent.type(screen.getByTestId('name-filter'), '{backspace}{backspace}');
-    expect(screen.getAllByTestId('planets')).toHaveLength(10);
+    expect(screen.getAllByTestId('planet-name')).toHaveLength(10);
     userEvent.selectOptions(screen.getByTestId('column-filter'), ['rotation_period']);
     userEvent.selectOptions(screen.getByTestId('comparison-filter'), ['igual a']);
     userEvent.type(screen.getByTestId('value-filter'), '24');
     userEvent.click(btnAdd);
-    expect(screen.queryAllByTestId('planets')).toHaveLength(0);
+    expect(screen.queryAllByTestId('planet-name')).toHaveLength(0);
 
     const filterPopulation = screen.getByText('population');
 

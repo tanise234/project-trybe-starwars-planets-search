@@ -1,9 +1,10 @@
 import React from 'react';
 import './App.css';
-import Header from './components/Header';
-import Table from './components/Table';
 import Provider from './context/myProvider';
+import Header from './components/Header';
 import Filters from './components/Filters';
+import Order from './components/Order';
+import Table from './components/Table';
 
 function App() {
   return (
@@ -11,6 +12,7 @@ function App() {
       <Provider>
         <Header />
         <Filters />
+        <Order />
         <Table />
       </Provider>
     </div>

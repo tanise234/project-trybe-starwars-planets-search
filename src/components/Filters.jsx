@@ -12,18 +12,31 @@ function Filters() {
     setFilterInputs,
   } = useContext(planetsContext);
 
-  const handleColumn = ({ target }) => {
-    console.log(target.value);
-    setFilterInputs({ ...filterInputs, column: target.value });
+  const handleChange = ({ target }) => {
+    setFilterInputs({ ...filterInputs, [target.name]: target.value });
   };
-  const handleComparison = ({ target }) => {
-    console.log(target.value);
-    setFilterInputs({ ...filterInputs, comparison: target.value });
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    setFormData(filterInputs);
   };
-  const handleValue = ({ target }) => {
-    console.log(target.value);
-    setFilterInputs({ ...filterInputs, value: target.value });
-  };
+
+  const handleDelete = (columnToDelete) => setFilterByNumericValues(
+    filterByNumericValues.filter(
+      (filter) => filter.column !== columnToDelete,
+    ),
+  );
+
+  const handleDeleteAll = () => setFilterByNumericValues([]);
+
+  useEffect(() => {
+    if (formData !== null) {
+      setFilterByNumericValues(
+        [...filterByNumericValues,
+          formData],
+      );
+    }
+  }, [formData]);
 
   useEffect(() => {
     const firstFilter = filterColumn.find(
@@ -41,30 +54,6 @@ function Filters() {
     });
   }, [filterByNumericValues]);
 
-  const handleSubmit = (event) => {
-    console.log(filterInputs);
-    console.log(filterByNumericValues);
-    event.preventDefault();
-    setFormData(filterInputs);
-  };
-
-  useEffect(() => {
-    if (formData !== null) {
-      setFilterByNumericValues(
-        [...filterByNumericValues,
-          formData],
-      );
-    }
-  }, [formData]);
-
-  const handleDelete = (columnToDelete) => setFilterByNumericValues(
-    filterByNumericValues.filter(
-      (filter) => filter.column !== columnToDelete,
-    ),
-  );
-
-  const handleDeleteAll = () => setFilterByNumericValues([]);
-
   return (
     <div>
       <form
@@ -73,10 +62,10 @@ function Filters() {
         onSubmit={ handleSubmit }
       >
         <select
-          name="column filter"
+          name="column"
           id="column filter"
           data-testid="column-filter"
-          onChange={ (event) => handleColumn(event) }
+          onChange={ (event) => handleChange(event) }
         >
           {
             filterColumn.map(
@@ -99,11 +88,10 @@ function Filters() {
           }
         </select>
         <select
-          name="comparison filter"
+          name="comparison"
           id="comparison filter"
           data-testid="comparison-filter"
-          onChange={ (event) => handleComparison(event) }
-
+          onChange={ (event) => handleChange(event) }
         >
           <option value="maior que">maior que</option>
           <option value="menor que">menor que</option>
@@ -111,10 +99,10 @@ function Filters() {
         </select>
         <input
           type="number"
+          name="value"
           defaultValue="0"
           data-testid="value-filter"
-          onChange={ (event) => handleValue(event) }
-
+          onChange={ (event) => handleChange(event) }
         />
         <button
           type="submit"

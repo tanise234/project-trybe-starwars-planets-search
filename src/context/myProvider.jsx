@@ -4,6 +4,7 @@ import MyContext from './myContext';
 import getData from '../services/getData';
 
 function Provider({ children }) {
+  const neg1 = -1;
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [nameTyped, setNameTyped] = useState('');
@@ -23,6 +24,7 @@ function Provider({ children }) {
     'rotation_period',
     'surface_water',
   ]);
+  const [order, setOrder] = useState({ order: { column: 'population', sort: 'ASC' } });
 
   const filterByName = () => {
     if (nameTyped.length > 0) {
@@ -47,12 +49,32 @@ function Provider({ children }) {
       }
     }));
 
+  const orderBy = (event) => {
+    event.preventDefault();
+    const { column, sort } = order.order;
+    if (sort === 'ASC') {
+      setFilteredData(filteredData.sort(
+        (a, b) => (Number(a[column]) - Number(b[column])),
+      ));
+      console.log(filteredData.sort(
+        (a, b) => (a[column] > b[column] ? 1 : neg1),
+      ));
+    } if (sort === 'DESC') {
+      setFilteredData(filteredData.sort(
+        (a, b) => (Number(b[column]) - Number(a[column])),
+      ));
+      console.log(filteredData.sort(
+        (a, b) => (b[column] > a[column] ? 1 : neg1),
+      ));
+    }
+  };
+
   // ao iniciar
   useEffect(() => {
     const fetchAPI = async () => {
       const get = await getData();
       setData(get);
-      setFilteredData(get);
+      setFilteredData(get.sort((a, b) => (a.name > b.name ? 1 : neg1)));
     };
     fetchAPI();
   }, []);
@@ -61,7 +83,9 @@ function Provider({ children }) {
   useEffect(() => {
     setFilteredData(filterByName());
     if (filterByNumericValues.length > 0) {
-      setFilteredData(filterByNumber(filterByName()));
+      setFilteredData(filterByNumber(
+        filterByName(),
+      ));
     }
   }, [nameTyped, filterByNumericValues]);
 
@@ -80,6 +104,9 @@ function Provider({ children }) {
     setFilterInputs,
     filterColumn,
     setfilterColumn,
+    order,
+    setOrder,
+    orderBy,
   };
 
   return (
