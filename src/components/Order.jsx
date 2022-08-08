@@ -6,6 +6,7 @@ function Order() {
     order,
     setOrder,
     orderBy,
+    filteredData,
   } = useContext(planetsContext);
 
   const handleColumn = ({ value }) => {
@@ -13,6 +14,7 @@ function Order() {
   };
   const handleSort = ({ id }) => {
     setOrder({ order: { ...order.order, sort: id } });
+    console.log('batatinha', filteredData);
   };
 
   return (

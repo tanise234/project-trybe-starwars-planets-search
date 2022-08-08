@@ -53,18 +53,14 @@ function Provider({ children }) {
     event.preventDefault();
     const { column, sort } = order.order;
     if (sort === 'ASC') {
-      setFilteredData(filteredData.sort(
-        (a, b) => (Number(a[column]) - Number(b[column])),
+      const newArray = (filteredData.sort(
+        (a, b) => (Number(a[column]) > Number(b[column]) ? 1 : neg1),
       ));
-      console.log(filteredData.sort(
-        (a, b) => (a[column] > b[column] ? 1 : neg1),
-      ));
+      console.log('console do order', newArray);
+      setFilteredData(newArray);
     } if (sort === 'DESC') {
       setFilteredData(filteredData.sort(
-        (a, b) => (Number(b[column]) - Number(a[column])),
-      ));
-      console.log(filteredData.sort(
-        (a, b) => (b[column] > a[column] ? 1 : neg1),
+        (a, b) => (Number(b[column]) > Number(a[column]) ? 1 : neg1),
       ));
     }
   };
@@ -88,6 +84,10 @@ function Provider({ children }) {
       ));
     }
   }, [nameTyped, filterByNumericValues]);
+
+  // useEffect(() => {
+  //   setFilteredData(orderBy());
+  // }, [order]);
 
   const contextValue = {
     data,
