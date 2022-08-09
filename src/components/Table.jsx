@@ -6,7 +6,7 @@ function Table() {
     filteredData,
   } = useContext(planetsContext);
 
-  // console.log('renderizou');
+  console.log('renderizou');
 
   return (
     <div>

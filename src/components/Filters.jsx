@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import planetsContext from '../context/myContext';
 
 function Filters() {
@@ -8,9 +8,13 @@ function Filters() {
     filterColumn,
     formData,
     setFormData,
-    filterInputs,
-    setFilterInputs,
   } = useContext(planetsContext);
+
+  const [filterInputs, setFilterInputs] = useState({
+    column: 'population',
+    comparison: 'maior que',
+    value: 0,
+  });
 
   const handleChange = ({ target }) => {
     setFilterInputs({ ...filterInputs, [target.name]: target.value });

@@ -12,11 +12,6 @@ function Provider({ children }) {
   const [filterByNumericValues, setFilterByNumericValues] = useState(
     [],
   );
-  const [filterInputs, setFilterInputs] = useState({
-    column: 'population',
-    comparison: 'maior que',
-    value: 0,
-  });
   const [filterColumn, setfilterColumn] = useState([
     'population',
     'orbital_period',
@@ -24,7 +19,6 @@ function Provider({ children }) {
     'rotation_period',
     'surface_water',
   ]);
-  const [order, setOrder] = useState({ order: { column: 'population', sort: 'ASC' } });
 
   const filterByName = () => {
     if (nameTyped.length > 0) {
@@ -49,22 +43,6 @@ function Provider({ children }) {
       }
     }));
 
-  const orderBy = (event) => {
-    event.preventDefault();
-    const { column, sort } = order.order;
-    if (sort === 'ASC') {
-      const newArray = (filteredData.sort(
-        (a, b) => (Number(a[column]) > Number(b[column]) ? 1 : neg1),
-      ));
-      console.log('console do order', newArray);
-      setFilteredData(newArray);
-    } if (sort === 'DESC') {
-      setFilteredData(filteredData.sort(
-        (a, b) => (Number(b[column]) > Number(a[column]) ? 1 : neg1),
-      ));
-    }
-  };
-
   // ao iniciar
   useEffect(() => {
     const fetchAPI = async () => {
@@ -85,10 +63,6 @@ function Provider({ children }) {
     }
   }, [nameTyped, filterByNumericValues]);
 
-  // useEffect(() => {
-  //   setFilteredData(orderBy());
-  // }, [order]);
-
   const contextValue = {
     data,
     setData,
@@ -100,13 +74,8 @@ function Provider({ children }) {
     setFilteredData,
     filterByNumericValues,
     setFilterByNumericValues,
-    filterInputs,
-    setFilterInputs,
     filterColumn,
     setfilterColumn,
-    order,
-    setOrder,
-    orderBy,
   };
 
   return (

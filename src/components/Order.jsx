@@ -3,18 +3,38 @@ import planetsContext from '../context/myContext';
 
 function Order() {
   const { filterColumn,
-    order,
-    setOrder,
-    orderBy,
     filteredData,
+    setFilteredData,
   } = useContext(planetsContext);
+  const neg1 = -1;
+
+  const formOrder = { order: { column: 'population', sort: 'ASC' } };
 
   const handleColumn = ({ value }) => {
-    setOrder({ order: { ...order.order, column: value } });
+    formOrder.order.column = value;
+    console.log(formOrder);
   };
   const handleSort = ({ id }) => {
-    setOrder({ order: { ...order.order, sort: id } });
-    console.log('batatinha', filteredData);
+    formOrder.order.sort = id;
+    console.log(formOrder);
+  };
+
+  const orderBy = (event) => {
+    event.preventDefault();
+    const { column, sort } = formOrder.order;
+    if (sort === 'ASC') {
+      const newArray = (filteredData.sort(
+        (a, b) => (Number(a[column]) > Number(b[column]) ? 1 : neg1),
+      ));
+      console.log('console do order', newArray);
+      setFilteredData(newArray);
+    } if (sort === 'DESC') {
+      const newArray = (filteredData.sort(
+        (a, b) => (Number(b[column]) > Number(a[column]) ? 1 : neg1),
+      ));
+      console.log('console do order', newArray);
+      setFilteredData(newArray);
+    }
   };
 
   return (
@@ -38,13 +58,14 @@ function Order() {
             </option>))
         }
       </select>
-      <div onChange={ ({ target }) => handleSort(target) }>
+      <div>
         <label htmlFor="ASC">
           <input
             type="radio"
             name="ASC-DESC"
             id="ASC"
             data-testid="column-sort-input-asc"
+            onClick={ ({ target }) => handleSort(target) }
           />
           Ascendente
         </label>
@@ -54,6 +75,7 @@ function Order() {
             name="ASC-DESC"
             id="DESC"
             data-testid="column-sort-input-desc"
+            onClick={ ({ target }) => handleSort(target) }
           />
           Descendente
         </label>
