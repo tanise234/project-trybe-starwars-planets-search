@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import planetsContext from '../context/myContext';
 
 function Filters() {
@@ -6,43 +6,16 @@ function Filters() {
     filterByNumericValues,
     setFilterByNumericValues,
     filterColumn,
-    formData,
-    setFormData,
   } = useContext(planetsContext);
 
+  const [formData, setFormData] = useState(null);
   const [filterInputs, setFilterInputs] = useState({
     column: 'population',
     comparison: 'maior que',
     value: 0,
   });
 
-  const handleChange = ({ target }) => {
-    setFilterInputs({ ...filterInputs, [target.name]: target.value });
-  };
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    setFormData(filterInputs);
-  };
-
-  const handleDelete = (columnToDelete) => setFilterByNumericValues(
-    filterByNumericValues.filter(
-      (filter) => filter.column !== columnToDelete,
-    ),
-  );
-
-  const handleDeleteAll = () => setFilterByNumericValues([]);
-
-  useEffect(() => {
-    if (formData !== null) {
-      setFilterByNumericValues(
-        [...filterByNumericValues,
-          formData],
-      );
-    }
-  }, [formData]);
-
-  useEffect(() => {
+  const updateFilters = () => {
     const firstFilter = filterColumn.find(
       (item) => {
         if (item && filterByNumericValues
@@ -56,7 +29,35 @@ function Filters() {
       ...filterInputs,
       column: firstFilter,
     });
-  }, [filterByNumericValues]);
+  };
+
+  const handleChange = ({ target }) => {
+    setFilterInputs({ ...filterInputs, [target.name]: target.value });
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    setFormData(filterInputs);
+    setFilterByNumericValues(
+      [...filterByNumericValues,
+        filterInputs],
+    );
+    updateFilters();
+  };
+
+  const handleDelete = (columnToDelete) => {
+    setFilterByNumericValues(
+      filterByNumericValues.filter(
+        (filter) => filter.column !== columnToDelete,
+      ),
+    );
+    updateFilters();
+  };
+
+  const handleDeleteAll = () => {
+    setFilterByNumericValues([]);
+    updateFilters();
+  };
 
   return (
     <div>

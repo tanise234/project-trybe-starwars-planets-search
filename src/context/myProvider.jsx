@@ -8,7 +8,6 @@ function Provider({ children }) {
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [nameTyped, setNameTyped] = useState('');
-  const [formData, setFormData] = useState(null);
   const [filterByNumericValues, setFilterByNumericValues] = useState(
     [],
   );
@@ -19,6 +18,8 @@ function Provider({ children }) {
     'rotation_period',
     'surface_water',
   ]);
+  const [order, setOrder] = useState({ order: { column: 'population', sort: 'ASC' } });
+  const [orderClicked, setOrderClicked] = useState(0);
 
   const filterByName = () => {
     if (nameTyped.length > 0) {
@@ -29,7 +30,7 @@ function Provider({ children }) {
     return data;
   };
 
-  const filterByNumber = (newData) => newData.filter((planet) => filterByNumericValues
+  const filterByNumber = (arrayData) => arrayData.filter((planet) => filterByNumericValues
     .every(({ column, comparison, value }) => {
       switch (comparison) {
       case 'maior que':
@@ -43,7 +44,28 @@ function Provider({ children }) {
       }
     }));
 
-  // ao iniciar
+  const orderBy = (arrayData) => {
+    const { column, sort } = order.order;
+    if (sort === 'ASC') {
+      const unknown = arrayData.filter((planet) => planet[column] === 'unknown');
+      const known = arrayData.filter((planet) => planet[column] !== 'unknown');
+      const sortedArray = (known.sort(
+        (a, b) => (Number(a[column]) > Number(b[column]) ? 1 : neg1),
+      ));
+      console.log('console do order ASC', [...sortedArray, ...unknown]);
+      return ([...sortedArray, ...unknown]);
+    } if (sort === 'DESC') {
+      const unknown = arrayData.filter((planet) => planet[column] === 'unknown');
+      const known = arrayData.filter((planet) => planet[column] !== 'unknown');
+      const sortedArray = (known.sort(
+        (a, b) => (Number(b[column]) > Number(a[column]) ? 1 : neg1),
+      ));
+      console.log('console do order DESC', [...sortedArray, ...unknown]);
+      return ([...sortedArray, ...unknown]);
+    }
+  };
+
+  // ao iniciar  -->> tentar tirar esse useEffect - executar uma função normal
   useEffect(() => {
     const fetchAPI = async () => {
       const get = await getData();
@@ -53,13 +75,17 @@ function Provider({ children }) {
     fetchAPI();
   }, []);
 
-  // ao aplicar um filtro
+  // .sort((a, b) => a.name.localeCompare(b.name));
+
+  // ao aplicar um filtro  -->> tentar tirar esse useEffect - executar uma função normal
   useEffect(() => {
-    setFilteredData(filterByName());
+    console.log(orderClicked);
     if (filterByNumericValues.length > 0) {
       setFilteredData(filterByNumber(
         filterByName(),
       ));
+    } else {
+      setFilteredData(filterByName());
     }
   }, [nameTyped, filterByNumericValues]);
 
@@ -68,14 +94,17 @@ function Provider({ children }) {
     setData,
     nameTyped,
     setNameTyped,
-    formData,
-    setFormData,
     filteredData,
     setFilteredData,
     filterByNumericValues,
     setFilterByNumericValues,
     filterColumn,
     setfilterColumn,
+    orderBy,
+    order,
+    setOrder,
+    orderClicked,
+    setOrderClicked,
   };
 
   return (

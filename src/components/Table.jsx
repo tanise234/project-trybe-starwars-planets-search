@@ -4,9 +4,17 @@ import planetsContext from '../context/myContext';
 function Table() {
   const {
     filteredData,
+    orderClicked,
+    orderBy,
   } = useContext(planetsContext);
 
   console.log('renderizou');
+  const planetsInfo = () => {
+    if (orderClicked === 0) {
+      return filteredData;
+    }
+    return orderBy(filteredData);
+  };
 
   return (
     <div>
@@ -30,7 +38,7 @@ function Table() {
         </thead>
         <tbody>
           {
-            filteredData.map((planet, index) => (
+            planetsInfo().map((planet, index) => (
               <tr key={ index }>
                 <td data-testid="planet-name">{ planet.name }</td>
                 <td>{ planet.rotation_period }</td>

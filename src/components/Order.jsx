@@ -3,43 +3,26 @@ import planetsContext from '../context/myContext';
 
 function Order() {
   const { filterColumn,
-    filteredData,
-    setFilteredData,
+    order,
+    setOrder,
+    orderClicked,
+    setOrderClicked,
   } = useContext(planetsContext);
-  const neg1 = -1;
-
-  const formOrder = { order: { column: 'population', sort: 'ASC' } };
 
   const handleColumn = ({ value }) => {
-    formOrder.order.column = value;
-    console.log(formOrder);
-  };
-  const handleSort = ({ id }) => {
-    formOrder.order.sort = id;
-    console.log(formOrder);
+    setOrder({ order: { ...order.order, column: value } });
   };
 
-  const orderBy = (event) => {
-    event.preventDefault();
-    const { column, sort } = formOrder.order;
-    if (sort === 'ASC') {
-      const newArray = (filteredData.sort(
-        (a, b) => (Number(a[column]) > Number(b[column]) ? 1 : neg1),
-      ));
-      console.log('console do order', newArray);
-      setFilteredData(newArray);
-    } if (sort === 'DESC') {
-      const newArray = (filteredData.sort(
-        (a, b) => (Number(b[column]) > Number(a[column]) ? 1 : neg1),
-      ));
-      console.log('console do order', newArray);
-      setFilteredData(newArray);
-    }
+  const handleSort = ({ id }) => {
+    setOrder({ order: { ...order.order, sort: id } });
   };
 
   return (
     <form
-      onSubmit={ (event) => orderBy(event) }
+      onSubmit={ (event) => {
+        event.preventDefault();
+        setOrderClicked(orderClicked + 1);
+      } }
     >
       <h3>Order</h3>
       <select
